@@ -1,0 +1,21 @@
+
+  {
+    "version": 2,
+    "builds": [
+      {
+        "src": "index.js",
+        "use": "@vercel/node"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "index.js"
+      }
+    ],
+"env": {      
+  "JWT_SECRET_KEY": "da9d9faaef63d3888c42f141a60c70c09ce117600c1f3d7f658f8f2c55cc20d6d675560edfe50651c36c91867cc77f3fb158ff0a5536e3ac65960758466b4d7e",
+    "JWT_REFRESH_SECRET": "c29d8843140184e517bcc9e1b33e4364b56de9ebdc6cb7f18888705db35d1cd23c19f524ef2bb9184d7fe5330dc969f7ce97b921fa509e53a3a83507e2f4002c",
+    "MONGO_URL": "mongodb+srv://ssmdbayzid:I5XwCbpFStWKPDxK@cluster0.drf6b9q.mongodb.net/crockeries-view?retryWrites=true&w=majority&appName=Cluster0"
+  }
+  }

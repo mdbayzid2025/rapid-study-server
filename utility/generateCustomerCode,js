@@ -1,0 +1,15 @@
+// utils/generateCustomerCode.js
+
+const CounterSchema = require("../Schema/CounterSchema");
+
+const generateCustomerCode = async () => {
+  const counter = await CounterSchema.findOneAndUpdate(
+    { name: 'customer_code' },
+    { $inc: { value: 1 } },
+    { new: true, upsert: true }
+  );
+
+  return String(counter.value).padStart(4, '0');
+};
+
+module.exports = generateCustomerCode;

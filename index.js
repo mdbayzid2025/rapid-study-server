@@ -12,6 +12,7 @@ const multer = require("multer");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const semesterRoutes = require("./modules/Semester/semesterRoute");
 const subjectRoutes = require("./modules/Subject/subjectRoutes");
+const noteRouter = require("./modules/Notes/noteRoute");
 const cloudinary = require("cloudinary").v2;
 
 const port = process.env.port || 5000;
@@ -97,6 +98,7 @@ app.use("/api/v1/teachers", teacherRouter);
 
 app.use("/api/v1/semesters", semesterRoutes);
 app.use("/api/v1/subjects", subjectRoutes);
+app.use("/api/v1/notes", noteRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello from Express + Cloudinary");

@@ -1,26 +1,13 @@
-import multer from "multer";
-import { v4 as uuidv4 } from "uuid";
-import {
-  S3Client,
-  PutObjectCommand,
-  ObjectCannedACL,
-} from "@aws-sdk/client-s3";
+
 import { v2 as cloudinary } from "cloudinary";
+import dotenv from "dotenv";
+import multer from "multer";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 import streamifier from "streamifier"; 
-import dotenv from "dotenv";
 
 dotenv.config();
 
-// Configure DigitalOcean Spaces
-const s3Client = new S3Client({
-  region: "us-east-1",
-  endpoint: process.env.DO_SPACE_ENDPOINT,
-  credentials: {
-    accessKeyId: process.env.DO_SPACE_ACCESS_KEY || "",
-    secretAccessKey: process.env.DO_SPACE_SECRET_KEY || "",
-  },
-});
+
 
 // Configure Cloudinary
 cloudinary.config({
@@ -50,6 +37,7 @@ const uploadFile = upload.single("file");
 
 // Upload multiple images
 const uploadMultipleImage = upload.fields([{ name: "images", maxCount: 15 }]);
+const uploadMultipleFile = upload.fields([{ name: "files", maxCount: 15 }]);
 
 // Upload profile and banner images
 const updateProfile = upload.fields([
@@ -58,17 +46,9 @@ const updateProfile = upload.fields([
 ]);
 
 const uploadToCloudinary = async (file) => {
-  if (!file) {
-    throw new Error("File is required for uploading.");
-  }
-
-  // Decide resource_type
-  let resourceType = "image";
-  if (
-    file.mimetype === "application/pdf" ||
-    file.mimetype === "application/msword" ||
-    file.mimetype.includes("officedocument")
-  ) {
+  // Set the resource type based on file MIME type
+  let resourceType = "image"; // default to image
+  if (file.mimetype === "application/pdf" || file.mimetype === "application/msword") {
     resourceType = "raw";
   } else if (file.mimetype.startsWith("video/")) {
     resourceType = "video";
@@ -78,24 +58,17 @@ const uploadToCloudinary = async (file) => {
     const uploadStream = cloudinary.uploader.upload_stream(
       {
         folder: "uploads",
-        resource_type: resourceType, // <-- FIXED HERE
+        resource_type: resourceType,
         use_filename: true,
         unique_filename: false,
       },
       (error, result) => {
         if (error) {
-          console.error("Error uploading file to Cloudinary:", error);
           return reject(error);
         }
-
-        resolve({
-          Location: result?.secure_url || "",
-          public_id: result?.public_id || "",
-          resource_type: result?.resource_type || resourceType
-        });
+        resolve(result);
       }
     );
-
     streamifier.createReadStream(file.buffer).pipe(uploadStream);
   });
 };

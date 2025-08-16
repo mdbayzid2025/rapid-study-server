@@ -10,7 +10,7 @@ const teacherSchema = new mongoose.Schema(
     photo: { type: String }, // store image URL or file path
     remarks: { type: String },
     subjects: [{type: mongoose.Schema.Types.ObjectId, ref: "Subject",},],
-    status: [{ type: String, default: ["Active"] }, ], // array of subjects
+    status: [{ type: String, default: "Active" }, ], // array of subjects
   },
   { timestamps: true }
 );

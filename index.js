@@ -13,9 +13,19 @@ const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const semesterRoutes = require("./modules/Semester/semesterRoute");
 const subjectRoutes = require("./modules/Subject/subjectRoutes");
 const noteRouter = require("./modules/Notes/noteRoute");
+const todosRouter = require("./modules/Todo/todosRoutes");
+const eventRouter = require("./modules/Events/eventRoute");
+const assignmentRouter = require("./modules/Assignment/assignmentRoutes");
 const cloudinary = require("cloudinary").v2;
 
 const port = process.env.port || 5000;
+
+const http = require('http');
+const socketIo = require('socket.io');
+const notificationRouter = require("./modules/Notification/notificationRoute");
+
+const server = http.createServer(app);
+const io = socketIo(server);
 
 // Middleware
 app.use(express.json());
@@ -24,7 +34,7 @@ app.use(cookieParser());
 app.use(cors({ origin: process.env.ORIGIN, credentials: true }));
 
 // Connect MongoDB
-connectDatabase().catch(err => console.log(err.message));
+connectDatabase().catch((err) => console.log(err.message));
 
 // Configure Cloudinary
 cloudinary.config({
@@ -37,8 +47,6 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: async (req, file) => {
-    console.log("files", file);
-    
     let folder = "uploads";
     let allowedFormats = [];
 
@@ -50,12 +58,11 @@ const storage = new CloudinaryStorage({
       allowedFormats = ["pdf", "doc", "docx", "ppt", "pptx"];
     }
 
-    const result =  {
+    const result = {
       folder,
       allowed_formats: allowedFormats,
       public_id: file.originalname.split(".")[0], // keep original name
     };
-    console.log("rteq", result);
 
     return result;
   },
@@ -64,41 +71,48 @@ const storage = new CloudinaryStorage({
 const upload = multer({ storage });
 
 // Upload route
-app.post("/api/upload", upload.fields([
-  { name: "photo", maxCount: 1 },
-  { name: "files", maxCount: 5 }
-]), (req, res) => {
-  try {
-        
-    console.log("req.files?.photo?.[0]", req.files?.photo?.[0]);
-    
-    // CloudinaryStorage returns the URL in 'path'
-    const photo = req.files?.photo?.[0]?.path || req.files?.photo?.[0]?.filename || null;
-const docs = req.files?.files?.map(file => file.path || file.filename) || [];
+app.post(
+  "/api/upload",
+  upload.fields([
+    { name: "photo", maxCount: 1 },
+    { name: "files", maxCount: 5 },
+  ]),
+  (req, res) => {
+    try {
+      console.log("req.files?.photo?.[0]", req.files?.photo?.[0]);
 
-    console.log("Photo URL:", photo);
-    console.log("Docs URLs:", docs);
+      // CloudinaryStorage returns the URL in 'path'
+      const photo =
+        req.files?.photo?.[0]?.path || req.files?.photo?.[0]?.filename || null;
+      const docs =
+        req.files?.files?.map((file) => file.path || file.filename) || [];
 
-    res.json({
-      success: true,
-      message: "Files uploaded successfully",
-      photo,
-      docs
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: err.message });
+      res.json({
+        success: true,
+        message: "Files uploaded successfully",
+        photo,
+        docs,
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ success: false, message: err.message });
+    }
   }
-});
+);
 
 // Routes
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/teachers", teacherRouter);
 // Use Semester routes
 
-app.use("/api/v1/semesters", semesterRoutes);
+app.use("/api/v1/assignment", assignmentRouter);
 app.use("/api/v1/subjects", subjectRoutes);
+app.use("/api/v1/semesters", semesterRoutes);
+app.use("/api/v1/events", eventRouter);
+app.use("/api/v1/todos", todosRouter);
 app.use("/api/v1/notes", noteRouter);
+app.use('/api/v1/notifications', notificationRouter);
+
 
 app.get("/", (req, res) => {
   res.send("Hello from Express + Cloudinary");

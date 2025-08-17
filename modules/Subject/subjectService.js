@@ -30,12 +30,16 @@ class SubjectService {
     return await Subject.find()
       .populate("semester")
       .populate("teacher")
+      .populate("todos")
       .sort({ createdAt: -1 });
   }
 
   // Get single
   async getSubjectById(id) {
-    return await Subject.findById(id).populate("semester").populate("teacher");
+    return await Subject.findById(id)
+    .populate("semester")
+    .populate("teacher")
+    .populate("todos")
   }
 
   // Update

@@ -30,7 +30,8 @@ class SubjectService {
     return await Subject.find()
       .populate("semester")
       .populate("teacher")
-      .populate("todos")
+      .populate("todos", "title status startDate endDate priority status")      
+      .populate("events", "eventTitle date time eventType location description")      
       .sort({ createdAt: -1 });
   }
 
@@ -40,6 +41,7 @@ class SubjectService {
     .populate("semester")
     .populate("teacher")
     .populate("todos")
+    .populate("events", "eventTitle date time eventType location description")    
   }
 
   // Update

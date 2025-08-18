@@ -15,13 +15,11 @@ class ToDoService {
 
     return todo;
   }
-
-  // Get all ToDos
-  async getAllToDos() {
-    return await ToDo.find()
-      .populate("subject")  // Populate subject data
-      .sort({ createdAt: -1 });  // Sort by created date (descending)
-  }
+async getAllToDos() {
+  return await ToDo.find()
+    .populate("subject", "name _id")  // Populate subject and select 'name' and '_id'
+    .sort({ createdAt: -1 });  // Sort by created date (descending)
+}
 
   // Get a ToDo by ID
   async getToDoById(id) {

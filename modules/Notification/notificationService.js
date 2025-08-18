@@ -1,4 +1,5 @@
 const Notification = require("../../Schema/NotificationSchema");
+const NotificationStatus = require("../../Schema/NotificationShema");
 
 
 class NotificationService {
@@ -15,33 +16,39 @@ class NotificationService {
     }
   }
 
-  // Mark notification as read
-  async markAsRead(notificationId) {
+  async markAllAsRead(userId) {
     try {
-      const notification = await Notification.findById(notificationId);
-      if (notification) {
-        notification.read = true;
-        await notification.save();
-        return notification;
-      }
-      throw new Error('Notification not found');
+      const result = await NotificationStatus.updateMany(
+        { userId, read: false }, // Find unread notifications for this user
+        { $set: { read: true } }  // Set read to true for those notifications
+      );
+      return result;
     } catch (error) {
-      console.error('Error marking notification as read:', error);
-      throw new Error('Error marking notification as read');
+      throw new Error('Error marking notifications as read');
     }
   }
 
-
-  // Get notifications for a user
-  async getUserNotifications() {
-    try {
-      return await Notification.find()
-        .sort({ createdAt: -1 })        
-    } catch (error) {
-      console.error('Error fetching notifications:', error);
-      throw new Error('Error fetching notifications');
-    }
+async getNotifications(userId) {
+  try {
+    // Find all notifications that are associated with the user
+    const notifications = await NotificationStatus.aggregate([
+      { $match: { userId: mongoose.Types.ObjectId(userId) } },
+      {
+        $lookup: {
+          from: 'notifications', // Join with the notifications collection
+          localField: 'notificationId',
+          foreignField: '_id',
+          as: 'notificationDetails',
+        },
+      },
+      { $unwind: '$notificationDetails' }, // Flatten the notification details
+      { $project: { 'notificationDetails.title': 1, 'notificationDetails.message': 1, 'notificationDetails.createdAt': 1, read: 1 } },
+    ]);
+    return notifications.map(item => item.notificationDetails);
+  } catch (error) {
+    throw new Error('Error fetching notifications');
   }
+}
 
     // Delete an event
   async deleteNotifications(id) {

@@ -7,11 +7,11 @@ const todoSchema = new mongoose.Schema({
   },
   startDate: {
     type: Date,
-    required: true, // Start date is required
+    // required: true, // Start date is required
   },
   endDate: {
     type: Date,
-    required: true, // End date is required
+    // required: true, // End date is required
   },
   subject: {
     type: mongoose.Schema.Types.ObjectId,

@@ -1,6 +1,6 @@
-const UPLOAD_USER_IMG_DIRECTORY = "public/images/users";
+const UPLOAD_USER_IMG_DIRECTORY = "public/upload/users";
 const MAX_FILE_SIZE = 2097152;
-const ALLOW_FILE_TYPES = ['jpg', "jpeg", "png"]
+const ALLOW_FILE_TYPES = ['jpg', "jpeg", "png", 'pdf', 'PDF']
 
 
 module.exports = {

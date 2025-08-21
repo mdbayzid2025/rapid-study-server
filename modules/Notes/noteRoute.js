@@ -1,13 +1,20 @@
 // routes/noteRoute.js
-const express = require("express");
+const express  = require("express");
 
-const { uploadMultipleImage, uploadMultipleDocuments, fileUploader } = require("../../helper/uploadFile");
 const notesController = require("./notesController");
+const upload  = require("../../middleware/uploadFile");
 
-const noteRouter = express.Router();
+const noteRouter = express.Router()
+noteRouter.post(
+  "/",
+  // upload('notes').fields([{images: "images", maxCount: 10}, {documents: "documents", maxCount: 5}]),
+  upload("notes").fields([{name: "images", maxCount: 10}, {name: "documents", maxCount: 5}]),
+  notesController.createNote // Create note and handle data saving
+);
 
-// Create note (with multiple images and documents)
-noteRouter.post("/", fileUploader?.uploadMultipleImage, notesController.createNote);
+// Update note
+noteRouter.post("/:id/documents", notesController.updateNote);
+
 
 // Update note
 noteRouter.patch("/:id", notesController.updateNote);

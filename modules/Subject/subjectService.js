@@ -21,7 +21,7 @@ class SubjectService {
       { $push: { subjects: subject._id } },
       { new: true }
     );
-    
+
     return subject;
   }
 
@@ -30,18 +30,27 @@ class SubjectService {
     return await Subject.find()
       .populate("semester")
       .populate("teacher")
-      .populate("todos", "title status startDate endDate priority status")      
-      .populate("events", "eventTitle date time eventType location description")      
+      .populate("todos", "title status startDate endDate priority status")
+      .populate("events", "eventTitle date time eventType location description")
       .sort({ createdAt: -1 });
   }
 
   // Get single
   async getSubjectById(id) {
     return await Subject.findById(id)
-    .populate("semester")
-    .populate("teacher")
-    .populate("todos")
-    .populate("events", "eventTitle date time eventType location description")    
+      .populate("semester")
+      .populate("teacher")
+      .populate({path: "todos", options: { sort: { createdAt: -1 } }})
+      .populate({
+        path: "assignments",
+        select: "title submissionDate time detailedInstructions createdAt",
+        options: { sort: { createdAt: -1 } }, // ✅ sort inside populate
+      })
+      .populate({
+        path: "events",
+        select: "eventTitle date time eventType location description",
+        options: { sort: { createdAt: -1 } }, // ✅ sort inside populate
+      });
   }
 
   // Update

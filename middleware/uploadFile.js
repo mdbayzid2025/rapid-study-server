@@ -4,7 +4,7 @@ const fs = require("fs");
 const { ALLOW_FILE_TYPES, MAX_FILE_SIZE } = require("../config");
 
 const getUploadDirectory = (type) => {
-  return path.join(__dirname, `../public/images/${type}`);
+  return path.join(__dirname, `../public/upload/${type}`);
 };
 
 const generateMulter = (type = "users") => {

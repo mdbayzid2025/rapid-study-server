@@ -17,7 +17,7 @@ const todosRouter = require("./modules/Todo/todosRoutes");
 const eventRouter = require("./modules/Events/eventRoute");
 const assignmentRouter = require("./modules/Assignment/assignmentRoutes");
 const cloudinary = require("cloudinary").v2;
-
+const path = require("path");
 const port = process.env.port || 5000;
 
 const http = require('http');
@@ -31,7 +31,11 @@ const io = socketIo(server);
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use(cors({ origin: process.env.ORIGIN, credentials: true }));
+app.use(cors({ origin: [
+  "http://10.10.7.102:3000",
+  "http://localhost:3000"
+]
+  , credentials: true }));
 
 // Connect MongoDB
 connectDatabase().catch((err) => console.log(err.message));
@@ -105,7 +109,7 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/teachers", teacherRouter);
 // Use Semester routes
 
-app.use("/api/v1/assignment", assignmentRouter);
+app.use("/api/v1/assignments", assignmentRouter);
 app.use("/api/v1/subjects", subjectRoutes);
 app.use("/api/v1/semesters", semesterRoutes);
 app.use("/api/v1/events", eventRouter);
@@ -117,6 +121,11 @@ app.use('/api/v1/notifications', notificationRouter);
 app.get("/", (req, res) => {
   res.send("Hello from Express + Cloudinary");
 });
+
+// Make everything inside /public accessible via URL
+// app.use(express.static(path.join(__dirname, "public")));
+app.use('/upload', express.static(path.join(__dirname, 'public/upload')));
+
 
 // Start server
 app.listen(port, () => {

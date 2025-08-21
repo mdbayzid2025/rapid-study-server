@@ -6,10 +6,10 @@ const noteSchema = new mongoose.Schema({
   description: { type: String },
   images: [{ type: String }],
   documents: [{ type: String }],
-  subject: { type: mongoose.Schema.Types.ObjectId, ref: "Subject" }, // Reference to Subject
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now },
-});
+  tags: [{ type: String }],
+  priority: { type: String },
+  subject: { type: mongoose.Schema.Types.ObjectId, ref: "Subject" }, // Reference to Subject  
+},{timestamps: true});
 
 // Exporting the model
 module.exports = mongoose.model("Note", noteSchema);

@@ -1,49 +1,55 @@
 // controllers/noteController.js
-const { fileUploader } = require("../../helper/uploadFile");
+
 const noteService = require("./noteService");
 
 class NoteController {
+
   async createNote(req, res) {
     try {
-       let cloudinaryResults = [];   
-       const images = []    ;
-    if (req.file) {
-    //   Handle single file upload
-      const cloudinaryResult = await fileUploader.uploadToCloudinary({
-        ...req.file,
-        resource_type: "image",
-        folder: "uploads",
-        use_filename: true,
-        unique_filename: true,
-        overwrite: true,
-      });
-      cloudinaryResults.push(cloudinaryResult);
-    } else if (req.files && req.files.images && req.files.images.length > 0) {      
-      for (let file of req.files.images) {
-        const cloudinaryResult = await fileUploader.uploadToCloudinary({
-          ...file,
-          resource_type: "image",
-          folder: "uploads",
-          use_filename: true,
-          unique_filename: true,
-          overwrite: true,
-        });
-        images?.push(cloudinaryResult?.secure_url);
-      }
+
+        if (req.file) {
+      const folder = req.file.destination.split("public")[1];
+      req.body.photo = `${process.env.BASE_URL}${folder}/${req.file.filename}`.replace(/\\/g, "/");
     }
 
-      // Assuming that images and docs are uploaded through the request
+      // Handle local document URLs
+      if (req?.files?.images && req?.files?.images.length > 0) {
+        const filePaths = req.files.images.map((images) => {
+          // Build the local file path
+          const folder = images.destination.split("public")[1];
+          return `${process.env.BASE_URL}${folder}/${images.filename}`.replace(/\\/g, "/");
+        });
+
+        req.body.images = filePaths; // Store documents array in the body
+      }
+      // Handle local document URLs
+      if (req?.files?.documents && req?.files?.documents.length > 0) {
+        const filePaths = req.files.documents.map((document) => {
+          // Build the local file path
+          const folder = document.destination.split("public")[1];
+          return `${process.env.BASE_URL}${folder}/${document.filename}`.replace(/\\/g, "/");
+        });
+
+        req.body.documents = filePaths; // Store documents array in the body
+      }
+      
+      // Prepare data to be saved
       const noteData = {
         title: req?.body?.title,
         description: req?.body?.description,
         subject: req?.body?.subject,
-        images
+        priority: req?.body?.priority,
+        tags: req?.body?.tags,
+        image: req.body.images, // Images uploaded to Cloudinary
+        documents: req.body.documents, // Documents uploaded locally
       };
 
-        const note = await noteService.createNote(noteData);
-      return res
-        .status(201)
-        .json({ success: true, message: "Note created", data: note });
+      console.log("noteData", noteData);
+
+      // You can save `noteData` to your database here
+      // const note = await noteService.createNote(noteData);
+
+      return res.status(201).json({ success: true, message: "Note created", data: req.body });
     } catch (error) {
       console.error(error);
       res.status(500).json({ success: false, message: "Server error", error });
@@ -53,16 +59,6 @@ class NoteController {
   async updateNote(req, res) {
     try {
       const noteId = req.params.id; // Get the note ID from the URL parameters
-      const { title, description, subject } = req.body;
-
-      // Assuming that images and documents are uploaded through the request
-      const noteData = {
-        title,
-        description,
-        subject,
-        // images: req?.files?.filter(file => file.mimetype.startsWith('image')).map(file => file.path),
-        // documents: req?.files?.filter(file => file.mimetype.startsWith('application')).map(file => file.path),
-      };
 
       // Update the note using the service
       const updatedNote = await noteService.updateNote(noteId, req.body);

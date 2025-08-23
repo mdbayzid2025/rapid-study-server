@@ -10,5 +10,6 @@ notificationRouter.patch('/:notificationId/read',  notificationController.markNo
 // notificationRouter.get('/',  notificationController.getNotifications); // Get user notifications
 notificationRouter.post('/:userId/mark-all-read', notificationController.markAllAsRead);
 notificationRouter.get('/notifications/:userId', notificationController.getNotifications);
+notificationRouter.get('/stats', notificationController.getDashboardStats);
 
 module.exports = notificationRouter;

@@ -1,7 +1,53 @@
+const Assignment = require("../../Schema/AssignmentSchema");
+const Note = require("../../Schema/NoteSchema");
+const Notice = require("../../Schema/noticeSchema");
+const ToDo = require("../../Schema/TodoSchema");
 const notificationService = require("./notificationService");
 
-
 class NotificationController {
+
+    // --------------- Dashboard Stats -------------
+  
+  async getDashboardStats(req, res) {
+  try {
+    // Total ToDos (Tasks)
+    const totalTasks = await ToDo.countDocuments();
+
+    // Pending Assignments (assuming there's a 'status' field like 'pending', 'completed', etc.)
+    const pendingAssignments = await Assignment.countDocuments({ status: 'pending' });
+
+    // Total Notes
+    const totalNotes = await Note.countDocuments();
+
+    // Active Notices (assuming there's an 'active' boolean or filter condition)
+    const activeNotices = await Notice.countDocuments();
+
+    // Construct stats array
+    const stats = [
+      { label: 'Total Tasks', value: totalTasks.toString(), color: 'bg-blue-50 text-blue-600', icon: '📋' },
+      { label: 'Upcoming Assignments', value: pendingAssignments.toString(), color: 'bg-orange-50 text-orange-600', icon: '📚' },
+      { label: 'Notes Added', value: totalNotes.toString(), color: 'bg-green-50 text-green-600', icon: '📝' },
+      { label: 'Active Notices', value: activeNotices.toString(), color: 'bg-purple-50 text-purple-600', icon: '🔔' }
+    ];
+
+    return res.status(200).json({
+      success: true,
+      message: 'Dashboard stats fetched successfully',
+      data: stats
+    });
+
+  } catch (error) {
+    console.error('Error fetching dashboard stats:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Server error',
+      error
+    });
+  }
+}
+
+
+
   // Create a new notification
   async createNotification(req, res) {
     try {            

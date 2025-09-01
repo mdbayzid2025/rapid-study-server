@@ -1,4 +1,6 @@
+const { AddCalanderSchedule } = require("../../helper/AddCalanderSchedule");
 const { default: generateNotificationMessage } = require("../../helper/generateNotificationMessage");
+const CalenderSchema = require("../../Schema/CalenderSchema");
 const notificationService = require("../Notification/notificationService");
 const eventService = require("./eventService");
 
@@ -9,8 +11,13 @@ class EventController {
       const event = await eventService.createEvent(req.body);
 
       const notificationData = generateNotificationMessage("event", event);
-
-      console.log("notificationData", notificationData);
+      const data = {
+        title: "Event",
+        eventId: event?._id,
+        start: event?.date,
+        color: "#3174ad"
+      }
+      await CalenderSchema(data);
 
       await notificationService.createNotification({
         ...notificationData,

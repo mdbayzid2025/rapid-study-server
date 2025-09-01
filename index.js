@@ -16,6 +16,8 @@ const noteRouter = require("./modules/Notes/noteRoute");
 const todosRouter = require("./modules/Todo/todosRoutes");
 const eventRouter = require("./modules/Events/eventRoute");
 const assignmentRouter = require("./modules/Assignment/assignmentRoutes");
+const calendarRoutes = require("./modules/Calander/calenderRouter");
+
 const cloudinary = require("cloudinary").v2;
 const path = require("path");
 const port = process.env.port || 5000;
@@ -116,6 +118,7 @@ app.use("/api/v1/events", eventRouter);
 app.use("/api/v1/todos", todosRouter);
 app.use("/api/v1/notes", noteRouter);
 app.use('/api/v1/notifications', notificationRouter);
+app.use('/api/v1/calendar', calendarRoutes);
 
 
 app.get("/", (req, res) => {

@@ -9,20 +9,13 @@ class NotificationController {
     // --------------- Dashboard Stats -------------
   
   async getDashboardStats(req, res) {
-  try {
-    // Total ToDos (Tasks)
-    const totalTasks = await ToDo.countDocuments();
-
-    // Pending Assignments (assuming there's a 'status' field like 'pending', 'completed', etc.)
+  try {    
+    const totalTasks = await ToDo.countDocuments();    
     const pendingAssignments = await Assignment.countDocuments({ status: 'pending' });
-
-    // Total Notes
+    
     const totalNotes = await Note.countDocuments();
-
-    // Active Notices (assuming there's an 'active' boolean or filter condition)
-    const activeNotices = await Notice.countDocuments();
-
-    // Construct stats array
+    
+    const activeNotices = await Notice.countDocuments();    
     const stats = [
       { label: 'Total Tasks', value: totalTasks.toString(), color: 'bg-blue-50 text-blue-600', icon: '📋' },
       { label: 'Upcoming Assignments', value: pendingAssignments.toString(), color: 'bg-orange-50 text-orange-600', icon: '📚' },

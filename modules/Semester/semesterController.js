@@ -1,10 +1,11 @@
+
 const semesterService = require("./semesterService");
 
 class SemesterController {
   async createSemester(req, res) {
 
     try {    
-      const semester = await semesterService.createSemester(req.body);
+      const semester = await semesterService.createSemester(req.body);      
      return  res.status(201).json({ success: true, message: "Semester created", data: semester });
     } catch (error) {
       console.error(error);

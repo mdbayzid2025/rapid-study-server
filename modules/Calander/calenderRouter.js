@@ -7,8 +7,8 @@ const calendarController = require('./calendarController');
 
 
 // Routes for calendar events
-calendarRouter.post('/', calendarController.createEvent); // Create a calendar event
-calendarRouter.get('/', calendarController.getEvents); // Get all calendar events
-calendarRouter.delete('/:eventId', calendarController.deleteEvent); // Delete a calendar event
+// calendarRouter.post('/', calendarController.createEvent);
+calendarRouter.get('/', calendarController.getCalendarData);
+// calendarRouter.delete('/:eventId', calendarController.deleteEvent);
 
 module.exports = calendarRouter;

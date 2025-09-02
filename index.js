@@ -17,17 +17,35 @@ const todosRouter = require("./modules/Todo/todosRoutes");
 const eventRouter = require("./modules/Events/eventRoute");
 const assignmentRouter = require("./modules/Assignment/assignmentRoutes");
 const calendarRoutes = require("./modules/Calander/calenderRouter");
+const socketIo = require('socket.io');
 
 const cloudinary = require("cloudinary").v2;
 const path = require("path");
 const port = process.env.port || 5000;
 
 const http = require('http');
-const socketIo = require('socket.io');
 const notificationRouter = require("./modules/Notification/notificationRoute");
 
+
+
+
+
 const server = http.createServer(app);
-const io = socketIo(server);
+ 
+ 
+const io = socketIo(server, {
+    cors: {
+        origin: "http://10.10.7.102:3000",
+        methods: ["GET", "POST", "DELETE", "PUT"]
+    },
+});
+
+io.on("connect", socket=> {
+  console.log("socket io", socket);
+  
+})
+
+
 
 // Middleware
 app.use(express.json());
@@ -41,70 +59,6 @@ app.use(cors({ origin: [
 
 // Connect MongoDB
 connectDatabase().catch((err) => console.log(err.message));
-
-// Configure Cloudinary
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_SECRET_KEY,
-});
-
-// Configure Cloudinary Storage
-const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: async (req, file) => {
-    let folder = "uploads";
-    let allowedFormats = [];
-
-    if (file.mimetype.startsWith("image/")) {
-      folder = "images";
-      allowedFormats = ["jpg", "jpeg", "png", "webp"];
-    } else {
-      folder = "documents";
-      allowedFormats = ["pdf", "doc", "docx", "ppt", "pptx"];
-    }
-
-    const result = {
-      folder,
-      allowed_formats: allowedFormats,
-      public_id: file.originalname.split(".")[0], // keep original name
-    };
-
-    return result;
-  },
-});
-
-const upload = multer({ storage });
-
-// Upload route
-app.post(
-  "/api/upload",
-  upload.fields([
-    { name: "photo", maxCount: 1 },
-    { name: "files", maxCount: 5 },
-  ]),
-  (req, res) => {
-    try {
-      console.log("req.files?.photo?.[0]", req.files?.photo?.[0]);
-
-      // CloudinaryStorage returns the URL in 'path'
-      const photo =
-        req.files?.photo?.[0]?.path || req.files?.photo?.[0]?.filename || null;
-      const docs =
-        req.files?.files?.map((file) => file.path || file.filename) || [];
-
-      res.json({
-        success: true,
-        message: "Files uploaded successfully",
-        photo,
-        docs,
-      });
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ success: false, message: err.message });
-    }
-  }
-);
 
 // Routes
 app.use("/api/v1/auth", authRouter);

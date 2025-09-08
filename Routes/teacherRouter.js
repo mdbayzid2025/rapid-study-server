@@ -9,7 +9,7 @@ teacherRouter.get("/", getAllTeachers);
 teacherRouter.get("/:id", getTeacherById);
 
 teacherRouter.post("/", upload('teacher').single("photo"), createTeacher);
-teacherRouter.patch("/:id", updateTeacher);
+teacherRouter.patch("/:id", upload('teacher').single("photo"), updateTeacher);
 teacherRouter.delete("/:id", deleteTeacher);
 
 module.exports = teacherRouter;

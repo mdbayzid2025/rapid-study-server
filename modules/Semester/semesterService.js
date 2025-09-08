@@ -8,16 +8,17 @@ class SemesterService {
   }
 
   // Get all semesters with populated subjects and class
-  async getAllSemesters() {
-    return await Semester.find().populate({
+async getAllSemesters() {
+  return await Semester.find({ status: "Active" })
+    .populate({
       path: "subjects",
-       populate: {
+      populate: {
         path: "teacher",
         model: "Teacher", // Name from TeacherSchema
       },
     })
-      .sort({ createdAt: -1 });
-  }
+    .sort({ createdAt: -1 });
+}
 
   // Get semester by ID with populated subjects and class
   async getSemesterById(id) {

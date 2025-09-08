@@ -6,10 +6,15 @@ const upload  = require("../../middleware/uploadFile");
 
 const noteRouter = express.Router()
 noteRouter.post(
-  "/",
-  // upload('notes').fields([{images: "images", maxCount: 10}, {documents: "documents", maxCount: 5}]),
+  "/",  
   upload("notes").fields([{name: "images", maxCount: 10}, {name: "documents", maxCount: 5}]),
-  notesController.createNote // Create note and handle data saving
+  notesController.createNote 
+);
+
+noteRouter.patch(
+  "/:noteId",  
+  upload("notes").fields([{name: "images", maxCount: 10}, {name: "documents", maxCount: 5}]),
+  notesController.updateNote 
 );
 
 // Update note

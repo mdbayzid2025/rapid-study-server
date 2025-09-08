@@ -26,8 +26,6 @@ exports.getTeacherById = async (req, res) => {
 exports.createTeacher = async (req, res) => {
   try {
     const teacherData = req.body;
-    console.log(teacherData)
-    console.log('file', req.file)
 
     if(req?.file){
       const folder = req.file.destination.split("public")[1];
@@ -44,12 +42,19 @@ exports.createTeacher = async (req, res) => {
 };
 
 exports.updateTeacher = async (req, res) => {
+  
+  if(req?.file){
+      const folder = req.file.destination.split("public")[1];
+      req.body.photo = `${process.env.BASE_URL}${folder}/${req.file.filename}`;
+    }
+  
   try {
     const teacher = await teacherService.updateTeacher(req.params.id, req.body);
     if (!teacher) {
       return res.status(404).json({ success: false, message: "Teacher not found" });
     }
-    return res.status(200).json({ success: true, data: teacher });
+    console.log("teacher update controller", teacher);
+    return res.status(200).json({ success: true, data: "teacher" });
   } catch (error) {
     return res.status(400).json({ success: false, message: error?.message });
   }

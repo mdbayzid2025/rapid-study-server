@@ -3,9 +3,10 @@ const mongoose = require("mongoose");
 const teacherSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
+    nameCode: { type: String,  },
     designation: { type: String, },
     department: { type: String, },
-    email: { type: String,  unique: true },
+    email: { type: String,  },
     contact: { type: String },
     photo: { type: String }, // store image URL or file path
     remarks: { type: String },

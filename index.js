@@ -51,7 +51,7 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ["http://10.10.7.102:3000", "http://localhost:3000"],
+    origin: ["http://10.10.7.102:3000", "http://localhost:3000", "https://rapid-study.vercel.app"],
     credentials: true,
   })
 );

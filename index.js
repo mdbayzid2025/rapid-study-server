@@ -30,7 +30,7 @@ const server = http.createServer(app);
 
 const io = socketIo(server, {
   cors: {
-    origin: ["http://localhost:3000", "http://10.10.7.102:3000"],
+    origin: ["http://localhost:3000", "http://10.10.7.102:3000", "https://rapid-study.vercel.app"],
     methods: ["GET", "POST", "DELETE", "PUT"],
   },
 });

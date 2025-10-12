@@ -1,9 +1,11 @@
 const Note = require("../../Schema/NoteSchema");
 const Subject = require("../../Schema/SubjectSchema");
+const QueryBuilder = require("../../utility/QueryBuilder");
 
 class NoteService {
   // Create a new note
   async createNote(data) {
+    
     const note = await Note.create(data);
 
     await Subject.findByIdAndUpdate(
@@ -12,14 +14,28 @@ class NoteService {
       { new: true }
     );
 
+    console.log("Note created successfully:", note);
+
     return note;
   }
 
   // Get all notes
-  async getAllNotes() {
-    return await Note.find().populate("subject")
-    .sort({ createdAt: -1 });
-  }
+async getAllNotes(query) {
+  const notesQueryBuilder = new QueryBuilder(
+    Note.find().populate('subject'),
+    query
+  )    
+    .search(['title', 'tags', 'subject.name'])
+    .filter()
+    .sort()
+    .fields()
+    .paginate();
+
+  const notes = await notesQueryBuilder.modelQuery;
+
+  return notes;
+}
+
 
   // Get a note by ID
   async getNoteById(id) {
@@ -30,15 +46,15 @@ class NoteService {
   const { files, body } = req; 
   const { oldImages, oldDocuments, tags, ...rest } = body;
 
+  
   const updatedImages = typeof oldImages === "string" ? [oldImages] : oldImages ?? [];
   const updatedDocuments = typeof oldDocuments === "string" ? [oldDocuments] : oldDocuments ?? [];
 
-  console.log("req.body files", files);
-  
   if (files?.images && files.images.length > 0) {
     const newImagePaths = files.images.map((image) => {
       const folder = image.destination.split("public")[1];
-      return `${process.env.BASE_URL}${folder}/${image.filename}`.replace(/\\/g, "/");
+      // return `${process.env.BASE_URL}${folder}/${image.filename}`.replace(/\\/g, "/");
+      return `http://localhost:5000${folder}/${image.filename}`.replace(/\\/g, "/");
     });
     updatedImages.push(...newImagePaths); 
   }
@@ -46,7 +62,8 @@ class NoteService {
   if (files?.documents && files.documents.length > 0) {    
     const newDocumentPaths = files?.documents.map((document) => {
       const folder = document?.destination.split("public")[1];
-      return `${process.env.BASE_URL}${folder}/${document.filename}`.replace(/\\/g, "/");
+      return `http://localhost:5000${folder}/${document.filename}`.replace(/\\/g, "/");
+      // return `${process.env.BASE_URL}${folder}/${document.filename}`.replace(/\\/g, "/");
     });
     updatedDocuments.push(...newDocumentPaths);
   }
@@ -63,7 +80,7 @@ class NoteService {
     },
       { new: true } 
     );
-    
+    console.log("Updated Note:", updatedNote);
     return updatedNote;
   } catch (error) {
     throw new Error(`Error updating note: ${error.message}`);

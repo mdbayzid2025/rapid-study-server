@@ -7,12 +7,8 @@ class NoteController {
     try {
       if (req?.files?.images && req?.files?.images?.length > 0) {
         const filePaths = req.files.images.map((images) => {
-          const folder = images.destination.split("public")[1];
-          // return `http://localhost:5000${folder}/${images.filename}`.replace(
-          //   /\\/g,
-          //   "/"
-          // );
-          return `${process.env.BASE_URL}${folder}/${images.filename}`.replace(
+          const folder = images.destination.split("public")[1];        
+          return `${folder}/${images.filename}`.replace(
             /\\/g,
             "/"
           );
@@ -25,7 +21,7 @@ class NoteController {
         const filePaths = req.files.documents.map((document) => {
           // Build the local file path
           const folder = document.destination.split("public")[1];
-          return `${process.env.BASE_URL}${folder}/${document.filename}`.replace(
+          return `${folder}/${document.filename}`.replace(
             /\\/g,
             "/"
           );

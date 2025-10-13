@@ -52,9 +52,8 @@ async getAllNotes(query) {
 
   if (files?.images && files.images.length > 0) {
     const newImagePaths = files.images.map((image) => {
-      const folder = image.destination.split("public")[1];
-      // return `${process.env.BASE_URL}${folder}/${image.filename}`.replace(/\\/g, "/");
-      return `http://localhost:5000${folder}/${image.filename}`.replace(/\\/g, "/");
+      const folder = image.destination.split("public")[1];     
+      return `${folder}/${image.filename}`.replace(/\\/g, "/");
     });
     updatedImages.push(...newImagePaths); 
   }
@@ -62,8 +61,7 @@ async getAllNotes(query) {
   if (files?.documents && files.documents.length > 0) {    
     const newDocumentPaths = files?.documents.map((document) => {
       const folder = document?.destination.split("public")[1];
-      return `http://localhost:5000${folder}/${document.filename}`.replace(/\\/g, "/");
-      // return `${process.env.BASE_URL}${folder}/${document.filename}`.replace(/\\/g, "/");
+      return `${folder}/${document.filename}`.replace(/\\/g, "/");      
     });
     updatedDocuments.push(...newDocumentPaths);
   }
@@ -79,8 +77,7 @@ async getAllNotes(query) {
       documents: updatedDocuments
     },
       { new: true } 
-    );
-    console.log("Updated Note:", updatedNote);
+    );    
     return updatedNote;
   } catch (error) {
     throw new Error(`Error updating note: ${error.message}`);

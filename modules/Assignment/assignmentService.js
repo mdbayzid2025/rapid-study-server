@@ -1,5 +1,6 @@
 const Assignment = require("../../Schema/AssignmentSchema");
 const Subject = require("../../Schema/SubjectSchema");
+const calendarService = require("../Calander/calendarService");
 
 
 class AssignmentService {
@@ -13,6 +14,15 @@ class AssignmentService {
       { $push: { assignments: assignment._id } },
       { new: true }
     );
+
+    const assignmentCalanderData = {
+        title: "Assignment",
+        type: "Assignment",
+        item: assignment?._id,
+        start: assignment?.submissionDate,
+        color: "#830a69ff",
+      };      
+      await calendarService.createCalendar(assignmentCalanderData);
 
     return assignment;
   }

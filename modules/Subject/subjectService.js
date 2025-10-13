@@ -37,10 +37,12 @@ class SubjectService {
 
   // Get single
   async getSubjectById(id) {
+   
     return await Subject.findById(id)
       .populate("semester", "title")
       .populate("teacher")
-      .populate({path: "todos", options: { sort: { createdAt: -1 } }})
+      .populate({ path: "notes", options: { sort: { createdAt: -1 } } })
+      .populate({ path: "todos", options: { sort: { createdAt: -1 } } })
       .populate({
         path: "assignments",
         select: "title submissionDate time detailedInstructions createdAt",

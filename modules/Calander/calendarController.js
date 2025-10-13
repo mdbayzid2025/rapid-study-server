@@ -16,11 +16,20 @@ class CalendarController {
 
   // Get all calendar events
   async getCalendarData(req, res) {
-    try {
-      
-      
+    try {            
       const calenderData = await calendarService.getCalendars();      
       res.status(200).json(calenderData);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+
+  // Get all calendar events
+  async getScheduledEventsById(req, res) {
+    try {
+      const { id } = req.params;
+      const scheduledEvents = await calendarService.getScheduledEventsById(id);
+      res.status(200).json(scheduledEvents);
     } catch (error) {
       res.status(500).json({ message: error.message });
     }

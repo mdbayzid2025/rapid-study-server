@@ -1,4 +1,4 @@
-const calendarService = require("../Calander/calendarService");
+
 const assignmentService = require("./assignmentService");
 
 class AssignmentController {
@@ -6,13 +6,8 @@ class AssignmentController {
   async createAssignment(req, res) {
     try {
       const assignment = await assignmentService.createAssignment(req.body);
-      const data = {
-        title: "Assignment",
-        eventId: assignment?._id,
-        start: assignment?.submissionDate,
-        color: "#830a69ff",
-      };
-      await calendarService.createCalendar(data);
+      
+      
       return res
         .status(201)
         .json({

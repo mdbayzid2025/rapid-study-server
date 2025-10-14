@@ -1,3 +1,4 @@
+const { sendNotifications } = require("../../helper/notificationHelper");
 const Note = require("../../Schema/NoteSchema");
 const Subject = require("../../Schema/SubjectSchema");
 const QueryBuilder = require("../../utility/QueryBuilder");
@@ -14,8 +15,18 @@ class NoteService {
       { new: true }
     );
 
-    console.log("Note created successfully:", note);
-
+//  await Promise.all(
+//     followers.map(follower =>
+//       sendNotifications({
+//         title: 'Add new notes',
+//         message: `Add new note of "${payload?.title}" has been published by ${(follower?.followingId)?.name}.`,
+//         receiver: follower.followerId,
+//         type: NOTIFICATION_TYPE.LEARNING,
+//         read: false,
+//         reference: payload._id
+//       }),
+//     ),
+//   );
     return note;
   }
 

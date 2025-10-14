@@ -1,0 +1,20 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 1
+    },
+    "auditLog": "D:\\Bayzid\\rapid-study-server\\winston\\error\\.76e5121ea8953f6731a055deb84cfdb1b815566f-audit.json",
+    "files": [
+        {
+            "date": 1760451369791,
+            "name": "D:\\Bayzid\\rapid-study-server\\winston\\error\\14-10-2025-20-error.log",
+            "hash": "fbcdf291ca61b955dfbbb4d15ed91f296fb630647cc4a5968f6cf7cff1a46ac1"
+        },
+        {
+            "date": 1760454977925,
+            "name": "D:\\Bayzid\\rapid-study-server\\winston\\error\\14-10-2025-21-error.log",
+            "hash": "dcd0275adab423c54b5aa3800063a69d9ea3291297312e77161a2ae098c6418b"
+        }
+    ],
+    "hashType": "sha256"
+}

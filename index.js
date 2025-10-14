@@ -1,15 +1,33 @@
+// ========================
+// 🌐 Imports & Config
+// ========================
 const express = require("express");
-const app = express();
 const cors = require("cors");
 const dotenv = require("dotenv");
-dotenv.config();
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
+const path = require("path");
+const {Server} = require("socket.io");
+
+// Load environment variables
+dotenv.config();
+
+// ========================
+// 📦 App Initialization
+// ========================
+const app = express();
+const port = process.env.port || 5000;
+
+// ========================
+// 🧩 Utilities & Database
+// ========================
 const connectDatabase = require("./utility/connectData");
+
+// ========================
+// 🛠️ Routes
+// ========================
 const authRouter = require("./Routes/authRouter");
 const teacherRouter = require("./Routes/teacherRouter");
-const cookieParser = require("cookie-parser");
-const multer = require("multer");
-const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const semesterRoutes = require("./modules/Semester/semesterRoute");
 const subjectRoutes = require("./modules/Subject/subjectRoutes");
 const noteRouter = require("./modules/Notes/noteRoute");
@@ -18,52 +36,36 @@ const eventRouter = require("./modules/Events/eventRoute");
 const assignmentRouter = require("./modules/Assignment/assignmentRoutes");
 const calendarRoutes = require("./modules/Calander/calenderRouter");
 const notificationRouter = require("./modules/Notification/notificationRoute");
-
-const socketIo = require("socket.io");
-
-const path = require("path");
-const port = process.env.port || 5000;
-
-const http = require("http");
-
-const server = http.createServer(app);
-
-const io = socketIo(server, {
-  cors: {
-    origin: ["http://localhost:3000", "http://10.10.7.102:3000", "https://rapid-study.vercel.app"],
-    methods: ["GET", "POST", "DELETE", "PUT"],
-  },
-});
-
-io.on("connection", socket => {
-  console.log("Socket connected:", socket.id);
-
-  socket.on("disconnect", () => {
-    console.log("Socket disconnected:", socket.id);
-  });
-});
+const { socketHelper } = require("./helper/socketHelper");
 
 
-
-// Middleware
+// ========================
+// ⚙️ Middlewares
+// ========================
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ["http://10.10.7.102:3000", "http://localhost:3000", "https://rapid-study.vercel.app"],
+    origin: [
+      "http://10.10.7.102:3000",
+      "http://localhost:3000",
+      "https://rapid-study.vercel.app",
+    ],
     credentials: true,
   })
 );
 
-// Connect MongoDB
+// ========================
+// 🗄️ Database Connection
+// ========================
 connectDatabase().catch((err) => console.log(err.message));
 
-// Routes
+// ========================
+// 🚦 API Routes
+// ========================
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/teachers", teacherRouter);
-// Use Semester routes
-
 app.use("/api/v1/assignments", assignmentRouter);
 app.use("/api/v1/subjects", subjectRoutes);
 app.use("/api/v1/semesters", semesterRoutes);
@@ -73,15 +75,46 @@ app.use("/api/v1/notes", noteRouter);
 app.use("/api/v1/notifications", notificationRouter);
 app.use("/api/v1/calendar", calendarRoutes);
 
+// ========================
+// 🏠 Root Endpoint
+// ========================
 app.get("/", (req, res) => {
   res.send("Hello from Express + Cloudinary");
 });
 
-// Make everything inside /public accessible via URL
+
+// ========================
+// 📁 Static Files
+// ========================
 // app.use(express.static(path.join(__dirname, "public")));
 app.use("/upload", express.static(path.join(__dirname, "public/upload")));
 
-// Start server
-app.listen(port, () => {
+// ========================
+// 🚀 Start Server
+// ========================
+const server = app.listen(port, () => {
   console.log(`✅ Server is running on port ${port}`);
 });
+
+// ========================
+// 🔌 Socket.io Setup
+// ========================
+const io = new Server(server, {
+  pingTimeout: 6000,
+  cors: {
+    origin: [
+      "http://10.10.7.102:3000",
+      "http://localhost:3000",
+      "https://rapid-study.vercel.app",
+    ],
+    methods: ["GET", "POST"],
+    credentials: true, // optional but useful if cookies/auth are used
+  },
+});
+
+socketHelper.socket(io);
+ global.io = io;
+
+// socketHandler.on("connection", () => {
+//   console.log("⚡ Client connected");
+// });

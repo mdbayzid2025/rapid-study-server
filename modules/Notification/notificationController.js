@@ -2,119 +2,165 @@ const Assignment = require("../../Schema/AssignmentSchema");
 const Note = require("../../Schema/NoteSchema");
 const Notice = require("../../Schema/noticeSchema");
 const ToDo = require("../../Schema/TodoSchema");
+const sendResponse = require("../../shared/sendResponse");
 const notificationService = require("./notificationService");
 
 class NotificationController {
+  // --------------- Dashboard Stats -------------
 
-    // --------------- Dashboard Stats -------------
-  
   async getDashboardStats(req, res) {
-  try {    
-    const totalTasks = await ToDo.countDocuments();    
-    const pendingAssignments = await Assignment.countDocuments({ status: 'pending' });
-    
-    const totalNotes = await Note.countDocuments();
-    
-    const activeNotices = await Notice.countDocuments();    
-    const stats = [
-      { label: 'Total Tasks', value: totalTasks.toString(), color: 'bg-blue-50 text-blue-600', icon: '📋' },
-      { label: 'Upcoming Assignments', value: pendingAssignments.toString(), color: 'bg-orange-50 text-orange-600', icon: '📚' },
-      { label: 'Notes Added', value: totalNotes.toString(), color: 'bg-green-50 text-green-600', icon: '📝' },
-      { label: 'Active Notices', value: activeNotices.toString(), color: 'bg-purple-50 text-purple-600', icon: '🔔' }
-    ];
+    try {
+      const totalTasks = await ToDo.countDocuments();
+      const pendingAssignments = await Assignment.countDocuments({
+        status: "pending",
+      });
 
-    return res.status(200).json({
-      success: true,
-      message: 'Dashboard stats fetched successfully',
-      data: stats
-    });
+      const totalNotes = await Note.countDocuments();
 
-  } catch (error) {
-    console.error('Error fetching dashboard stats:', error);
-    return res.status(500).json({
-      success: false,
-      message: 'Server error',
-      error
-    });
+      const activeNotices = await Notice.countDocuments();
+      const stats = [
+        {
+          label: "Total Tasks",
+          value: totalTasks.toString(),
+          color: "bg-blue-50 text-blue-600",
+          icon: "📋",
+        },
+        {
+          label: "Upcoming Assignments",
+          value: pendingAssignments.toString(),
+          color: "bg-orange-50 text-orange-600",
+          icon: "📚",
+        },
+        {
+          label: "Notes Added",
+          value: totalNotes.toString(),
+          color: "bg-green-50 text-green-600",
+          icon: "📝",
+        },
+        {
+          label: "Active Notices",
+          value: activeNotices.toString(),
+          color: "bg-purple-50 text-purple-600",
+          icon: "🔔",
+        },
+      ];
+
+      return res.status(200).json({
+        success: true,
+        message: "Dashboard stats fetched successfully",
+        data: stats,
+      });
+    } catch (error) {
+      console.error("Error fetching dashboard stats:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Server error",
+        error,
+      });
+    }
   }
-}
-
-
 
   // Create a new notification
   async createNotification(req, res) {
-    try {            
-        console.log("notification", req.body);
-        
-      const notification = await notificationService.createNotification(req.body);
+    try {
+      console.log("notification", req.body);
+
+      const notification = await notificationService.createNotification(
+        req.body
+      );
 
       return res.status(201).json({
         success: true,
-        message: 'Notification created successfully',
+        message: "Notification created successfully",
         data: notification,
       });
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ success: false, message: 'Server error', error });
+      return res
+        .status(500)
+        .json({ success: false, message: "Server error", error });
     }
   }
 
   async markAllAsRead(req, res) {
-  try {
-    const { userId } = req.params; // Get userId from the request params
+    try {
+      const { userId } = req.params; // Get userId from the request params
 
-    // Call the service to mark notifications as read
-    const result = await notificationService.markAllAsRead(userId);
+      // Call the service to mark notifications as read
+      const result = await notificationService.markAllAsRead(userId);
 
-    if (result.modifiedCount > 0) {
-      return res.status(200).json({
-        success: true,
-        message: 'All notifications marked as read',
-        data: result,
-      });
-    } else {
-      return res.status(200).json({
-        success: true,
-        message: 'No unread notifications found',
-      });
+      if (result.modifiedCount > 0) {
+        return res.status(200).json({
+          success: true,
+          message: "All notifications marked as read",
+          data: result,
+        });
+      } else {
+        return res.status(200).json({
+          success: true,
+          message: "No unread notifications found",
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      return res
+        .status(500)
+        .json({ success: false, message: "Server error", error });
     }
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ success: false, message: 'Server error', error });
   }
-}
 
   // Mark notification as read
   async markNotificationAsRead(req, res) {
-    try {      
+    try {
       const notification = await notificationService.markAsRead(notificationId);
       return res.status(200).json({
         success: true,
-        message: 'Notification marked as read',
+        message: "Notification marked as read",
         data: notification,
       });
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ success: false, message: 'Server error', error });
+      return res
+        .status(500)
+        .json({ success: false, message: "Server error", error });
     }
   }
 
-async getNotifications(req, res) {
-  try {
-    const { userId } = req.params; // Get the userId from request params
+  async getNotifications(req, res) {
+    try {
+      // Call the service to get notifications for this user
+      const notifications = await notificationService.getNotifications();
 
-    // Call the service to get notifications for this user
-    const notifications = await notificationService.getNotifications(userId);
-
-    return res.status(200).json({
-      success: true,
-      data: notifications,
-    });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ success: false, message: 'Server error', error });
+      return res.status(200).json({
+        success: true,
+        data: notifications,
+      });
+    } catch (error) {
+      console.error(error);
+      return res
+        .status(500)
+        .json({ success: false, message: "Server error", error });
+    }
   }
-}
+
+   async getAllNotifications(req, res) {
+    try {
+      // Call the service to get notifications for this user
+      const result = await notificationService.getAllNotifications();
+
+     return res.status(200).json({        
+        success: true,
+        message: "All notifications fetched successfully",
+        data: result.data,
+        pagination: result.meta,
+      });
+    } catch (error) {
+      console.error(error);
+      return res
+        .status(500)
+        .json({ success: false, message: "Server error", error });
+    }
+  }
 }
 
 module.exports = new NotificationController();

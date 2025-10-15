@@ -7,7 +7,7 @@ const dotenv = require("dotenv");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const path = require("path");
-const {Server} = require("socket.io");
+const { Server } = require("socket.io");
 
 // Load environment variables
 dotenv.config();
@@ -37,7 +37,9 @@ const assignmentRouter = require("./modules/Assignment/assignmentRoutes");
 const calendarRoutes = require("./modules/Calander/calenderRouter");
 const notificationRouter = require("./modules/Notification/notificationRoute");
 const { socketHelper } = require("./helper/socketHelper");
-
+const { sendNotifications } = require("./helper/notificationHelper");
+const Notification = require("./Schema/NotificationSchema");
+const QueryBuilder = require("./utility/QueryBuilder");
 
 // ========================
 // ⚙️ Middlewares
@@ -82,6 +84,35 @@ app.get("/", (req, res) => {
   res.send("Hello from Express + Cloudinary");
 });
 
+app.get("/notify", async (req, res) => {
+  const data = await Notification.find().lean();
+
+  sendNotifications({
+    title: "Add new notes",
+    message: `Add new note of has been published by ${data?.length + 1}.`,
+    // receiver: follower.followerId,
+    receiver: "68dcfbd20fa1a936d5ce1c39",
+    type: "Class Test",
+    read: false,
+    // reference: payload._id
+    reference: "68dcfbd20fa1a936d5ce1c39",
+  });
+
+  const notificationQueryBuilder = new QueryBuilder(
+    Notification.find()
+  ).paginate();
+  // const result = await Notification.find();
+
+  const notifications = await notificationQueryBuilder.modelQuery;
+  const meta = await notificationQueryBuilder.getPaginationInfo();
+
+  return res.json({
+    status: 200,
+    message: "Add notfification success",
+    data: notifications,
+    meta,
+  });
+});
 
 // ========================
 // 📁 Static Files
@@ -113,7 +144,7 @@ const io = new Server(server, {
 });
 
 socketHelper.socket(io);
- global.io = io;
+global.io = io;
 
 // socketHandler.on("connection", () => {
 //   console.log("⚡ Client connected");

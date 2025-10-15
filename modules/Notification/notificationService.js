@@ -1,6 +1,5 @@
 const Notification = require("../../Schema/NotificationSchema");
-const NotificationStatus = require("../../Schema/NotificationShema");
-
+const QueryBuilder = require("../../utility/QueryBuilder");
 
 class NotificationService {
   // Create a new notification
@@ -11,46 +10,70 @@ class NotificationService {
       await notification.save();
       return notification;
     } catch (error) {
-      console.error('Error creating notification:', error);
-      throw new Error('Error creating notification');
+      console.error("Error creating notification:", error);
+      throw new Error("Error creating notification");
     }
   }
 
   async markAllAsRead(userId) {
     try {
-      const result = await NotificationStatus.updateMany(
-        { userId, read: false }, // Find unread notifications for this user
-        { $set: { read: true } }  // Set read to true for those notifications
+      const result = await Notification.updateMany(
+        { userId, read: false },
+        { $set: { read: true } }
       );
       return result;
     } catch (error) {
-      throw new Error('Error marking notifications as read');
+      throw new Error("Error marking notifications as read");
     }
   }
 
-async getNotifications(userId) {
-  try {
-    // Find all notifications that are associated with the user
-    const notifications = await NotificationStatus.aggregate([
-      { $match: { userId: mongoose.Types.ObjectId(userId) } },
-      {
-        $lookup: {
-          from: 'notifications', // Join with the notifications collection
-          localField: 'notificationId',
-          foreignField: '_id',
-          as: 'notificationDetails',
-        },
-      },
-      { $unwind: '$notificationDetails' }, // Flatten the notification details
-      { $project: { 'notificationDetails.title': 1, 'notificationDetails.message': 1, 'notificationDetails.createdAt': 1, read: 1 } },
-    ]);
-    return notifications.map(item => item.notificationDetails);
-  } catch (error) {
-    throw new Error('Error fetching notifications');
-  }
-}
+  async getAllNotifications(userId) {
+    try {
+      const notificationQueryBuilder = new QueryBuilder(Notification.find())
+        .paginate()
+        .filter()
+        .sort()
+        .paginate()
+        .fields();
+      // const result = await Notification.find();
 
-    // Delete an event
+      const notifications = await notificationQueryBuilder.modelQuery;
+      const meta = await notificationQueryBuilder.getPaginationInfo();
+      return { data: notifications, meta };
+    } catch (error) {
+      throw new Error("Error marking notifications as read", error);
+    }
+  }
+
+  async getNotifications(userId) {
+    try {
+      const notifications = await Notification.aggregate([
+        { $match: { userId: mongoose.Types.ObjectId(userId) } },
+        {
+          $lookup: {
+            from: "notifications",
+            localField: "notificationId",
+            foreignField: "_id",
+            as: "notificationDetails",
+          },
+        },
+        { $unwind: "$notificationDetails" },
+        {
+          $project: {
+            "notificationDetails.title": 1,
+            "notificationDetails.message": 1,
+            "notificationDetails.createdAt": 1,
+            read: 1,
+          },
+        },
+      ]);
+      return notifications.map((item) => item.notificationDetails);
+    } catch (error) {
+      throw new Error("Error fetching notifications");
+    }
+  }
+
+  // Delete an event
   async deleteNotifications(id) {
     try {
       // 1. Delete the event by ID

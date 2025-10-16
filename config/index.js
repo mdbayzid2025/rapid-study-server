@@ -1,12 +1,13 @@
 const UPLOAD_USER_IMG_DIRECTORY = "public/upload/users";
 const MAX_FILE_SIZE = 104857600; // 100MB in bytes
 const ALLOW_FILE_TYPES = ['jpg', "jpeg", "png", 'pdf', 'PDF']
-
+const jwt_access_secret = process.env.jwt_access_secret;
 
 module.exports = {
     UPLOAD_USER_IMG_DIRECTORY,
     MAX_FILE_SIZE,
-    ALLOW_FILE_TYPES
+    ALLOW_FILE_TYPES,
+    jwt_access_secret
 }
 
 /* env 

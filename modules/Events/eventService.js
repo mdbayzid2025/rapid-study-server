@@ -1,3 +1,4 @@
+const { sendNotifications } = require("../../helper/notificationHelper");
 const Event = require("../../Schema/eventsSchema");
 const Subject = require("../../Schema/SubjectSchema");
 const calendarService = require("../Calander/calendarService");
@@ -7,23 +8,29 @@ class EventService {
   async createEvent(data) {
     const event = await Event.create(data);
 
-    if (data?.subject) {
-      await Subject.findByIdAndUpdate(
-        data.subject,
-        { $push: { events: event._id } },
-        { new: true }
-      );
-    }
+    const subject = await Subject.findByIdAndUpdate(
+      data.subject,
+      { $push: { events: event._id } },
+      { new: true }
+    ).select("name");
 
     const eventCalanderData = {
       title: "Event",
       type: "Event",
       start: event?.date,
-      item: event?._id,      
+      item: event?._id,
       color: "#003877",
     };
     await calendarService.createCalendar(eventCalanderData);
 
+    sendNotifications({
+      title: "Scheduled new event",
+      message: `Add new event of <b>${subject?.name}</b>.`,
+      receiver: '68dcfbd20fa1a936d5ce1c39',
+      type: "Event",
+      read: false,
+      reference: subject._id,
+    });
     return event;
   }
 

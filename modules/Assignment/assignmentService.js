@@ -1,3 +1,4 @@
+const { sendNotifications } = require("../../helper/notificationHelper");
 const Assignment = require("../../Schema/AssignmentSchema");
 const Subject = require("../../Schema/SubjectSchema");
 const calendarService = require("../Calander/calendarService");
@@ -9,7 +10,7 @@ class AssignmentService {
     const assignment = await Assignment.create(data);
 
     // Optionally: Add assignment ID to subject's assignments array
-    await Subject.findByIdAndUpdate(
+   const subject =  await Subject.findByIdAndUpdate(
       data.subject,
       { $push: { assignments: assignment._id } },
       { new: true }
@@ -24,6 +25,14 @@ class AssignmentService {
       };      
       await calendarService.createCalendar(assignmentCalanderData);
 
+      sendNotifications({
+      title: "Scheduled new assignment",
+      message: `Scheduled new assignment of <b style="">${subject?.name}</b>.`,
+      receiver: '68dcfbd20fa1a936d5ce1c39',
+      type: "Assignment",
+      read: false,
+      reference: subject._id,
+    });
     return assignment;
   }
 

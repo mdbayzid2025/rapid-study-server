@@ -65,4 +65,4 @@ class NoticeService {
   }
 }
 
-module.exports = NoticeService;
+module.exports = new NoticeService();

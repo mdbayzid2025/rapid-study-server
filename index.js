@@ -40,6 +40,7 @@ const { socketHelper } = require("./helper/socketHelper");
 const { sendNotifications } = require("./helper/notificationHelper");
 const Notification = require("./Schema/NotificationSchema");
 const QueryBuilder = require("./utility/QueryBuilder");
+const noticeRouter = require("./modules/Notice/noticeRoute");
 
 // ========================
 // ⚙️ Middlewares
@@ -76,6 +77,7 @@ app.use("/api/v1/todos", todosRouter);
 app.use("/api/v1/notes", noteRouter);
 app.use("/api/v1/notifications", notificationRouter);
 app.use("/api/v1/calendar", calendarRoutes);
+app.use("/api/v1/notice", noticeRouter);
 
 // ========================
 // 🏠 Root Endpoint

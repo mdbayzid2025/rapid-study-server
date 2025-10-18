@@ -42,6 +42,7 @@ const Notification = require("./Schema/NotificationSchema");
 const QueryBuilder = require("./utility/QueryBuilder");
 const noticeRouter = require("./modules/Notice/noticeRoute");
 const { AuthRoutes } = require("./modules/Auth/auth.route");
+const UserRoutes = require("./modules/User/UserRoute");
 
 // ========================
 // ⚙️ Middlewares
@@ -70,6 +71,7 @@ connectDatabase().catch((err) => console.log(err.message));
 // ========================
 app.use("/api/v1/auth", AuthRoutes);
 app.use("/api/v1/teachers", teacherRouter);
+app.use("/api/v1/users", UserRoutes);
 app.use("/api/v1/assignments", assignmentRouter);
 app.use("/api/v1/subjects", subjectRoutes);
 app.use("/api/v1/semesters", semesterRoutes);

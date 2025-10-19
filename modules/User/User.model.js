@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -34,9 +34,9 @@ const userSchema = new mongoose.Schema(
     },
     address: {
       type: {
-        area: { type: String, trim: true },
-        upazilla: { type: String, trim: true },
+        area: { type: String, trim: true },        
         thana: { type: String, trim: true },
+        district: { type: String, trim: true },
       },
       _id: false,
       default: {},
@@ -87,29 +87,6 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-// 🔐 Compare plain password with hashed password
-userSchema.statics.isMatchPassword = async function (password, hashPassword) {
-  return await bcrypt.compare(password, hashPassword);
-};
-
-// 🧩 Check duplicate email and hash password before saving
-userSchema.pre('save', async function (next) {
-  const User = this.constructor; // Access model dynamically
-
-  // Check if email already exists
-  const isExist = await User.findOne({ email: this.email });
-  if (isExist) {
-    throw new ApiError(StatusCodes.BAD_REQUEST, 'Email already exists!');
-  }
-
-  // Hash password
-  this.password = await bcrypt.hash(
-    this.password,
-    10
-  );
-
-  next();
-});
 
 const User = mongoose.model('User', userSchema);
 

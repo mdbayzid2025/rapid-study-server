@@ -9,7 +9,7 @@ const createUser = catchAsync(async (req, res) => {
     success: true,
     statusCode: 201,
     message: 'User created successfully',
-    data: result,
+    data: result?.data,
   });
 });
 
@@ -37,10 +37,35 @@ const getUserById = catchAsync(async (req, res) => {
   });
 });
 
+
+// Get single User
+const getProfileData = catchAsync(async (req, res) => {
+  
+  const result = await UserService.getProfileFromDB(req.user);
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: 'User retrieved successfully',
+    data: result,
+  });
+});
+
 // Update User
 const updateUser = catchAsync(async (req, res) => {
   const { id } = req.params;
   const result = await UserService.updateUserToDB(id, req.body);
+  sendResponse(res, {
+    success: true,
+    statusCode: 203,
+    message: 'User updated successfully',
+    data: result,
+  });
+});
+
+// Update User
+const updateProfile = catchAsync(async (req, res) => {
+  
+  const result = await UserService.updateProfileToDB(req.body, req.user);
   sendResponse(res, {
     success: true,
     statusCode: 203,
@@ -65,6 +90,8 @@ module.exports.UserController = {
   createUser,
   getAllUsers,
   getUserById,
+  getProfileData,
   updateUser,
+  updateProfile,
   deleteUser,
 };

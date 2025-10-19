@@ -42,18 +42,15 @@ const registerUser = async (payload) => {
     role: newUser.role,
   };
 
-  const token = jwt.sign(jwtPayload, jwt_access_secret, { expiresIn: '7d' });
+  const accessToken = jwt.sign(jwtPayload, jwt_access_secret, { expiresIn: '7d' });
 
   // 6️⃣ Return consistent response
-  return {
-    success: true,
-    statusCode: StatusCodes.CREATED,
-    message: 'User registered successfully',
-    token,
+  return {    
     data: {
       id: newUser._id,
       email: newUser.email,
       role: newUser.role,
+      accessToken
     },
   };
 };

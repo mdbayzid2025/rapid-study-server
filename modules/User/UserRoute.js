@@ -6,6 +6,9 @@ const UserRoutes = express.Router();
 
 UserRoutes.post('/', UserController.createUser);
 UserRoutes.get('/', auth(), UserController.getAllUsers);
+UserRoutes.get('/profile', auth(), UserController.getProfileData);
+
+UserRoutes.patch('/profile', auth(), UserController.updateProfile);
 UserRoutes.get('/:id', auth(), UserController.getUserById);
 UserRoutes.patch('/:id', auth(), UserController.updateUser);
 UserRoutes.delete('/:id', auth(), UserController.deleteUser);

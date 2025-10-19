@@ -29,9 +29,24 @@ const getUserByIdFromDB = async (id) => {
   return result;
 };
 
+// Get single user by ID
+const getProfileFromDB = async (user) => {
+  const result = await User.findOne({_id: user.id}).select('-password');
+  return result;
+};
+
 // Update user info
 const updateUserToDB = async (id, payload) => {
   const result = await User.findByIdAndUpdate(id, payload, {
+    new: true,
+    runValidators: true,
+  }).select('-password');
+  return result;
+};
+
+// Update user info
+const updateProfileToDB = async (payload, user) => {
+  const result = await User.findByIdAndUpdate(user.id, payload, {
     new: true,
     runValidators: true,
   }).select('-password');
@@ -48,6 +63,8 @@ module.exports.UserService = {
   createUserToDB,
   getAllUsersFromDB,
   getUserByIdFromDB,
+  updateProfileToDB,
+  getProfileFromDB,
   updateUserToDB,
   deleteUserFromDB,
 };

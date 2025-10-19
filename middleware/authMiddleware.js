@@ -4,6 +4,9 @@
 const { StatusCodes } = require('http-status-codes');
 const { jwtHelper } = require('../helper/jwtHelper');
 const ApiError = require('../errors/HttpError');
+const { jwt_access_secret } = require('../config');
+
+
 
 const auth = (...roles) => {
   return async (req, res, next) => {
@@ -17,7 +20,7 @@ const auth = (...roles) => {
         const token = tokenWithBearer.split(' ')[1];
 
         // verify token
-        const verifyUser = jwtHelper.verifyToken(token, config.jwt.jwt_secret);
+        const verifyUser = jwtHelper.verifyToken(token, jwt_access_secret);
 
         // attach user to request
         req.user = verifyUser;

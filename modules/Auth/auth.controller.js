@@ -11,7 +11,7 @@ const registerUserController = catchAsync(async (req, res) => {
     success: true,
     message: 'User registered successfully',
     statusCode: 201,
-    data: registeredUser,
+    data: registeredUser?.data,
   });
 });
 
@@ -23,7 +23,7 @@ const loginUserController = catchAsync(async (req, res) => {
     success: true,
     statusCode: 200,
     message: 'User logged in successfully',
-    data: loginResult,
+    data: loginResult?.data,
   });
 });
 

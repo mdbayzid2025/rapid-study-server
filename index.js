@@ -50,16 +50,19 @@ const UserRoutes = require("./modules/User/UserRoute");
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use(
-  cors({
-    origin: [
-      "http://10.10.7.102:3000",
-      "http://localhost:3000",
-      "https://rapid-study.vercel.app",
-    ],
-    credentials: true,
-  })
-);
+
+// CORS configuration
+const corsOptions = {
+  origin: [
+    "http://10.10.7.102:3000",
+    "http://10.10.7.6:3000",      
+    "http://localhost:3000",
+    "https://rapid-study.vercel.app",
+  ],
+  credentials: true,  // Ensure credentials (cookies, auth headers) are included
+};
+
+app.use(cors(corsOptions));  // Apply the CORS middleware
 
 // ========================
 // 🗄️ Database Connection

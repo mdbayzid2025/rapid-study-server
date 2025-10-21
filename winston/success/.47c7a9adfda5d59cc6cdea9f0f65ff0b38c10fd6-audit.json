@@ -1,0 +1,40 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 1
+    },
+    "auditLog": "C:\\Users\\Tanjim\\Documents\\Bayzid\\rapid-study-server\\winston\\success\\.47c7a9adfda5d59cc6cdea9f0f65ff0b38c10fd6-audit.json",
+    "files": [
+        {
+            "date": 1761068606428,
+            "name": "C:\\Users\\Tanjim\\Documents\\Bayzid\\rapid-study-server\\winston\\success\\21-10-2025-23-success.log",
+            "hash": "d4932aa726143b1909e50507bdf328e396fb5c166e579faa40e8d2c5e07248a4"
+        },
+        {
+            "date": 1761069648821,
+            "name": "C:\\Users\\Tanjim\\Documents\\Bayzid\\rapid-study-server\\winston\\success\\22-10-2025-00-success.log",
+            "hash": "3c6377bb79b4c5cfced851e300ebd75ba244ef2b8aa7d326c1045b6029e1a4ee"
+        },
+        {
+            "date": 1761074963032,
+            "name": "C:\\Users\\Tanjim\\Documents\\Bayzid\\rapid-study-server\\winston\\success\\22-10-2025-01-success.log",
+            "hash": "d56bed4894abd6626dc8788ea04459c7272d6573d79220e420388353a1ed65fd"
+        },
+        {
+            "date": 1761076848380,
+            "name": "C:\\Users\\Tanjim\\Documents\\Bayzid\\rapid-study-server\\winston\\success\\22-10-2025-02-success.log",
+            "hash": "b1520d0d30726a5ea79fd93a1046f556731db613cd13f8efbc4bbd8472eefab1"
+        },
+        {
+            "date": 1761080703368,
+            "name": "C:\\Users\\Tanjim\\Documents\\Bayzid\\rapid-study-server\\winston\\success\\22-10-2025-03-success.log",
+            "hash": "207e71a73ec2cd14670e6e4b8a43b138812be773c69991897ed8f4c40cddbc03"
+        },
+        {
+            "date": 1761084037651,
+            "name": "C:\\Users\\Tanjim\\Documents\\Bayzid\\rapid-study-server\\winston\\success\\22-10-2025-04-success.log",
+            "hash": "8c0757c2389aa7b7ae3fba589da2331a5e51ce325fcd20885fa337f548c0bcc5"
+        }
+    ],
+    "hashType": "sha256"
+}

@@ -32,6 +32,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    role: {type: String, default: 'USER', enum: ['USER', 'SUPER_ADMIN', 'ADMIN']},
     address: {
       type: {
         area: { type: String, trim: true },        

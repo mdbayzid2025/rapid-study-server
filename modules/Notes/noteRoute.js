@@ -3,6 +3,7 @@ const express  = require("express");
 
 const notesController = require("./notesController");
 const upload  = require("../../middleware/uploadFile");
+const auth = require("../../middleware/authMiddleware");
 
 const noteRouter = express.Router()
 noteRouter.post(
@@ -28,7 +29,7 @@ noteRouter.patch("/:id", notesController.updateNote);
 noteRouter.delete("/:id", notesController.deleteNote);
 
 // Get all notes
-noteRouter.get("/", notesController.getAllNotes);
+noteRouter.get("/", auth(), notesController.getAllNotes);
 
 // Get note by ID
 noteRouter.get("/:id", notesController.getNoteById);

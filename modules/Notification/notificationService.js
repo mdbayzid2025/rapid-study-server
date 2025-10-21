@@ -27,9 +27,9 @@ class NotificationService {
     }
   }
 
-  async getAllNotifications(userId) {
+  async getAllNotifications(query, user) {
     try {
-      const notificationQueryBuilder = new QueryBuilder(Notification.find())
+      const notificationQueryBuilder = new QueryBuilder(Notification.find({receiver: user.id}), query)
         .paginate()
         .filter()
         .sort()

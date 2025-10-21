@@ -1,5 +1,6 @@
 const express = require('express');
 const notificationController = require('./notificationController');
+const auth = require('../../middleware/authMiddleware');
 
 const notificationRouter = express.Router();
 
@@ -8,8 +9,8 @@ notificationRouter.post('/',  notificationController.createNotification); // Cre
 notificationRouter.patch('/:notificationId/read',  notificationController.markNotificationAsRead); // Mark notification as read
 
 
-notificationRouter.get('/',  notificationController.getAllNotifications); // Get user notifications
-notificationRouter.post('/:userId/mark-all-read', notificationController.markAllAsRead);
+notificationRouter.get('/', auth(), notificationController.getAllNotifications); // Get user notifications
+notificationRouter.post('/:userId/read-all', notificationController.markAllAsRead);
 notificationRouter.get('/notifications/:userId', notificationController.getNotifications);
 notificationRouter.get('/stats', notificationController.getDashboardStats);
 

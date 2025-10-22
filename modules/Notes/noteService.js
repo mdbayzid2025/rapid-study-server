@@ -2,26 +2,34 @@ const { sendNotifications } = require("../../helper/notificationHelper");
 const Note = require("../../Schema/NoteSchema");
 const Subject = require("../../Schema/SubjectSchema");
 const QueryBuilder = require("../../utility/QueryBuilder");
+const User = require("../User/User.model");
 
 class NoteService {
   // Create a new note
   async createNote(data) {
     const note = await Note.create(data);
 
-   const subject = await Subject.findByIdAndUpdate(
+    const subject = await Subject.findByIdAndUpdate(
       data?.subject,
       { $push: { notes: note?._id } },
       { new: true }
     ).select('name');
+
+    const users = await User.find()
     
-    sendNotifications({
-      title: "Add new notes",
-      message: `Add new note of  <b >${subject?.name}</b>.`,      
-      receiver: "68dcfbd20fa1a936d5ce1c39",
-      type: "Note",
-      read: false,
-      reference: subject._id      
-    });
+    await Promise.all(
+      users?.map(user =>
+        sendNotifications({
+          title: "Add new notes",
+          message: `Add new note of  <b >${subject?.name}</b>.`,
+          receiver: user?._id,
+          type: "Note",
+          read: false,
+          reference: subject._id
+        })
+      )
+    )
+
     return note;
   }
 

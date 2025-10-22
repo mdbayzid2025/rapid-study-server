@@ -36,7 +36,7 @@ class NoteController {
         description: req?.body?.description,
         subject: req?.body?.subject,
         priority: req?.body?.priority,
-        tags: JSON.parse(req?.body?.tags),
+        tags: req?.body?.tags ? JSON.parse(req?.body?.tags) : [],
         images: req.body.images,
         documents: req.body.documents,
       };

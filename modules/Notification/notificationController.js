@@ -129,7 +129,7 @@ class NotificationController {
   async getNotifications(req, res) {
     try {
       // Call the service to get notifications for this user
-      const notifications = await notificationService.getNotifications();
+      const notifications = await notificationService.getNotifications(req.query);
 
       return res.status(200).json({
         success: true,
@@ -146,7 +146,7 @@ class NotificationController {
    async getAllNotifications(req, res) {
     try {
       // Call the service to get notifications for this user
-      const result = await notificationService.getAllNotifications();
+      const result = await notificationService.getAllNotifications(req.query, req.user);
 
      return res.status(200).json({        
         success: true,

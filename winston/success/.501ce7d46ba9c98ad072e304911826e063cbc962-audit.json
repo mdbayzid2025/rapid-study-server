@@ -6,44 +6,24 @@
     "auditLog": "D:\\Bayzid\\rapid-study-server\\winston\\success\\.501ce7d46ba9c98ad072e304911826e063cbc962-audit.json",
     "files": [
         {
-            "date": 1760803143334,
-            "name": "D:\\Bayzid\\rapid-study-server\\winston\\success\\18-10-2025-21-success.log",
-            "hash": "c63d7e226b8dd07e581b8f3782927498f5cdaf5064292c8a9d71547dee38e1d1"
+            "date": 1761054396138,
+            "name": "D:\\Bayzid\\rapid-study-server\\winston\\success\\21-10-2025-19-success.log",
+            "hash": "3776548411382b9f22003779cee23b9512540c17cb72e0121a1fdc4d7355efbf"
         },
         {
-            "date": 1760803291763,
-            "name": "D:\\Bayzid\\rapid-study-server\\winston\\success\\18-10-2025-22-success.log",
-            "hash": "373b1b6b42ca85d807399eb5a628d53402e080594c2423645e9961684fb580e9"
+            "date": 1761056324092,
+            "name": "D:\\Bayzid\\rapid-study-server\\winston\\success\\21-10-2025-20-success.log",
+            "hash": "530f2c27a5372117217b34cd15af8f58c06f853f7ad203736c52c793ea474c65"
         },
         {
-            "date": 1760849056907,
-            "name": "D:\\Bayzid\\rapid-study-server\\winston\\success\\19-10-2025-10-success.log",
-            "hash": "9c8e8b62db70599b077bf721b2b44797aff44a28d276e094a4573827b43dad57"
+            "date": 1761061689807,
+            "name": "D:\\Bayzid\\rapid-study-server\\winston\\success\\21-10-2025-21-success.log",
+            "hash": "72464e5a9cd60e50238c36d28857efc256b9426814c86a6c068df035953f92e4"
         },
         {
-            "date": 1760855911326,
-            "name": "D:\\Bayzid\\rapid-study-server\\winston\\success\\19-10-2025-12-success.log",
-            "hash": "6aa5a28c28cf5294c3944648a917d99b479fe5a8d88958a68822018fb2f4e15a"
-        },
-        {
-            "date": 1760865782274,
-            "name": "D:\\Bayzid\\rapid-study-server\\winston\\success\\19-10-2025-15-success.log",
-            "hash": "42d2eb5b3cf5064e1dd367528ac0b8a9d9e2fb79c5e2744f1dbd1af365e536f7"
-        },
-        {
-            "date": 1760881549248,
-            "name": "D:\\Bayzid\\rapid-study-server\\winston\\success\\19-10-2025-19-success.log",
-            "hash": "f86deed5e91b4b6cbd2dd0318a6fb14bb9f3465077093c479bfd1eb704e4d5e8"
-        },
-        {
-            "date": 1760882443564,
-            "name": "D:\\Bayzid\\rapid-study-server\\winston\\success\\19-10-2025-20-success.log",
-            "hash": "3ffe5b675a8514c325a26341fac2ec210117c1256760a77fffdfbca2e96837a3"
-        },
-        {
-            "date": 1760886249199,
-            "name": "D:\\Bayzid\\rapid-study-server\\winston\\success\\19-10-2025-21-success.log",
-            "hash": "4b2ea39d912c940b681beebc08f526309c586b30dd95bbdc6d7fb37acc21a3c8"
+            "date": 1761108924437,
+            "name": "D:\\Bayzid\\rapid-study-server\\winston\\success\\22-10-2025-10-success.log",
+            "hash": "d4c4b5db9ff7236151073122b821d30adffabba386bd2aefba2e71cea8ae60c3"
         }
     ],
     "hashType": "sha256"
